@@ -1,8 +1,23 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Qr from '../assets/qr.svg';
 import Google from '../assets/google.svg';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '../const';
+import { signIn } from '../const/Signin';
 
 function Onboarding() {
+  GoogleSignin.configure({
+    webClientId: WEB_CLIENT_ID,
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+    offlineAccess: true,
+    forceCodeForRefreshToken: false,
+    iosClientId: IOS_CLIENT_ID,
+  });
+
   return (
     <View style={styles.container}>
       <View style={{ height: '30%' }} />
@@ -17,7 +32,11 @@ function Onboarding() {
             continue.
           </Text>
 
-          <TouchableOpacity activeOpacity={0.7} style={styles.button}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.button}
+            onPress={signIn}
+          >
             <Text style={styles.txt2}>Continue with</Text>
             <Google width={23} height={23} />
           </TouchableOpacity>

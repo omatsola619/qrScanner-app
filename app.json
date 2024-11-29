@@ -13,25 +13,36 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.omatsola619.qrScanner"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.omatsola619.qrScanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-barcode-scanner",
       [
         "expo-camera",
         {
           "cameraPermission": "Allow QrScanner to access your camera",
           "microphonePermission": "Allow QrScanner to access your microphone",
           "recordAudioAndroid": true
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.977024213742-ug932oub6a3c9oshgf24cqepjfuklc3q"
         }
       ]
     ]
