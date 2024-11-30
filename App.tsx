@@ -1,15 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Onboarding from './screens/Onboarding';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './screens/Home';
 import History from './screens/History';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ScannerScreen from './screens/Scanner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,10 +83,39 @@ function MyStack() {
 }
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // To handle loading state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkUserInfo = async () => {
+      try {
+        const userInfo = await AsyncStorage.getItem('@userInfo');
+        if (userInfo) {
+          setIsLoggedIn(true); // User is logged in
+        } else {
+          setIsLoggedIn(false); // User is not logged in
+        }
+      } catch (error) {
+        console.error('Error checking user info:', error);
+      } finally {
+        setIsLoading(false); // Loading complete
+      }
+    };
+
+    checkUserInfo();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FDB623" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
-      {loggedIn ? <MyStack /> : <Onboarding />}
+      {isLoggedIn ? <MyStack /> : <Onboarding />}
       <StatusBar style="auto" />
     </NavigationContainer>
   );
@@ -87,5 +124,11 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff', // Optional: Set background color
   },
 });

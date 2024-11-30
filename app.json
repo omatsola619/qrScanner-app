@@ -45,6 +45,11 @@
           "iosUrlScheme": "com.googleusercontent.apps.977024213742-ug932oub6a3c9oshgf24cqepjfuklc3q"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "10ee2661-8e7b-4fdb-8ff2-fa49005cc67e"
+      }
+    }
   }
 }

@@ -1,21 +1,56 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Dp from '../assets/dp.svg';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+// import Dp from '../assets/dp.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 function Home() {
+  const [userInfo, setUserInfo] = useState<any>(null);
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const storedUserInfo = await AsyncStorage.getItem('@userInfo');
+        if (storedUserInfo) {
+          setUserInfo(JSON.parse(storedUserInfo));
+          console.log('user info is', JSON.parse(storedUserInfo));
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <View style={styles.header}>
             <View style={styles.dp}>
-              <Dp width={40} height={40} />
+              {userInfo?.photo ? (
+                <Image
+                  source={{ uri: userInfo.photo }}
+                  style={{ width: 40, height: 40, borderRadius: '100%' }}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: '#333',
+                    borderRadius: 50,
+                  }}
+                />
+              )}
             </View>
             <View>
               <Text>Welcome</Text>
-              <Text>Omash</Text>
+              <Text>{userInfo.givenName}</Text>
             </View>
           </View>
           <View style={styles.scanWrp}>

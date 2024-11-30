@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Qr from '../assets/qr.svg';
-import Google from '../assets/google.svg';
+// import Qr from '../assets/qr.svg';
+// import Google from '../assets/google.svg';
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -8,6 +8,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '../const';
 import { signIn } from '../const/Signin';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 function Onboarding() {
   GoogleSignin.configure({
@@ -23,7 +24,7 @@ function Onboarding() {
       <View style={{ height: '30%' }} />
       <View style={styles.wrapper}>
         <View style={styles.qrContainer}>
-          <Qr />
+          <AntDesign name="qrcode" size={250} color="#333" />
         </View>
 
         <View>
@@ -38,7 +39,8 @@ function Onboarding() {
             onPress={signIn}
           >
             <Text style={styles.txt2}>Continue with</Text>
-            <Google width={23} height={23} />
+            {/*<Google width={23} height={23} />*/}
+            <AntDesign name="google" size={23} color="white" />
           </TouchableOpacity>
         </View>
       </View>
