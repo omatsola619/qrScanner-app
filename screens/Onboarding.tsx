@@ -8,11 +8,14 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '../const';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../context/AuthContext';
 
 function Onboarding() {
+  const { user, login, logout, setProfile } = useContext(AuthContext);
+
   GoogleSignin.configure({
     webClientId: WEB_CLIENT_ID,
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
@@ -22,25 +25,6 @@ function Onboarding() {
   });
 
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const checkUserInfo = async () => {
-      try {
-        const userInfo = await AsyncStorage.getItem('@userInfo');
-        if (userInfo) {
-          console.log('user is logged in');
-        } else {
-          console.log('user is not logged in'); // User is not logged in
-        }
-      } catch (error) {
-        console.error('Error checking user info:', error);
-      } finally {
-        console.log('an error occured'); // Loading complete
-      }
-    };
-
-    checkUserInfo();
-  }, []);
 
   const signIn = async () => {
     try {
@@ -52,10 +36,9 @@ function Onboarding() {
         const userInfo = response.data.user; // Extract user information
         console.log({ user: userInfo });
 
-        // Save user info to AsyncStorage
-        await AsyncStorage.setItem('@userInfo', JSON.stringify(userInfo));
-        console.log('User info saved to AsyncStorage');
-        // return true;
+        //log the user in
+        login(userInfo);
+        console.log('User logged in successfully');
       } else {
         // Sign in was cancelled by the user
         console.log('Sign in was cancelled');

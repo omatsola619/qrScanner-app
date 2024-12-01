@@ -1,49 +1,41 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 // import Dp from '../assets/dp.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import * as SplashScreen from 'expo-splash-screen';
 
 function Home() {
   const [userInfo, setUserInfo] = useState<any>(null);
   const navigation = useNavigation<any>();
+  const { user, logout, loading, login } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const storedUserInfo = await AsyncStorage.getItem('@userInfo');
-        if (storedUserInfo) {
-          setUserInfo(JSON.parse(storedUserInfo));
-          console.log('user info is', JSON.parse(storedUserInfo));
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('@userInfo');
-      console.log('User info removed from AsyncStorage');
-      navigation.replace('Onboarding'); // Navigate to Onboarding screen
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FDB623" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={handleLogout} style={styles.dp}>
-              {userInfo?.photo ? (
+            <TouchableOpacity onPress={logout} style={styles.dp}>
+              {user?.photo ? (
                 <Image
-                  source={{ uri: userInfo.photo }}
+                  source={{ uri: user.photo }}
                   style={{ width: 40, height: 40, borderRadius: '100%' }}
                   resizeMode="cover"
                 />
@@ -59,8 +51,8 @@ function Home() {
               )}
             </TouchableOpacity>
             <View>
-              <Text>Welcome</Text>
-              <Text>{userInfo ? userInfo.givenName : 'myname'}</Text>
+              <Text>Welcome!</Text>
+              <Text>{user ? user.givenName : 'myname'}</Text>
             </View>
           </View>
           <View style={styles.scanWrp}>
@@ -114,5 +106,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
     fontWeight: 700,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff', // Optional: Set background color
   },
 });

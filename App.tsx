@@ -1,37 +1,43 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyStack from './navigation/Stack';
 import AuthStack from './navigation/AuthStack';
+import {
+  AuthContext,
+  AuthProvider,
+  UserProfileType,
+} from './context/AuthContext';
+import * as SplashScreen from 'expo-splash-screen';
 
 const Tabs = createBottomTabNavigator();
 
-export default function App() {
-  const [isLoading, setIsLoading] = useState(true); // To handle loading state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function Root() {
+  const { user, login, logout, setProfile, loading } = useContext(AuthContext);
+  const [isTryingLogin, setIsTryingLogin] = useState(true);
 
   useEffect(() => {
-    const checkUserInfo = async () => {
+    SplashScreen.preventAutoHideAsync();
+    const fetchToken = async () => {
       try {
-        const userInfo = await AsyncStorage.getItem('@userInfo');
-        if (userInfo) {
-          setIsLoggedIn(true); // User is logged in
-        } else {
-          setIsLoggedIn(false); // User is not logged in
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          const userProfile: UserProfileType = JSON.parse(storedUser);
+          login(userProfile); // Pass the parsed user object
         }
       } catch (error) {
-        console.error('Error checking user info:', error);
+        console.error('Error fetching user profile:', error);
       } finally {
-        setIsLoading(false); // Loading complete
+        setIsTryingLogin(false);
+        SplashScreen.hideAsync();
       }
     };
-
-    checkUserInfo();
+    fetchToken();
   }, []);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#FDB623" />
@@ -41,8 +47,16 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MyStack /> : <AuthStack />}
+      {user ? <MyStack /> : <AuthStack />}
     </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Root />
+    </AuthProvider>
   );
 }
 
