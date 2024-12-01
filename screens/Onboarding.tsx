@@ -7,8 +7,10 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '../const';
-import { signIn } from '../const/Signin';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 function Onboarding() {
   GoogleSignin.configure({
@@ -18,6 +20,67 @@ function Onboarding() {
     forceCodeForRefreshToken: false,
     iosClientId: IOS_CLIENT_ID,
   });
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkUserInfo = async () => {
+      try {
+        const userInfo = await AsyncStorage.getItem('@userInfo');
+        if (userInfo) {
+          console.log('user is logged in');
+        } else {
+          console.log('user is not logged in'); // User is not logged in
+        }
+      } catch (error) {
+        console.error('Error checking user info:', error);
+      } finally {
+        console.log('an error occured'); // Loading complete
+      }
+    };
+
+    checkUserInfo();
+  }, []);
+
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+
+      // Check if sign-in was successful
+      if (response) {
+        const userInfo = response.data.user; // Extract user information
+        console.log({ user: userInfo });
+
+        // Save user info to AsyncStorage
+        await AsyncStorage.setItem('@userInfo', JSON.stringify(userInfo));
+        console.log('User info saved to AsyncStorage');
+        // return true;
+      } else {
+        // Sign in was cancelled by the user
+        console.log('Sign in was cancelled');
+      }
+    } catch (error) {
+      if (error) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            // operation (e.g., sign in) already in progress
+            console.log('Sign-in already in progress');
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            // Android only, play services not available or outdated
+            console.log('Google Play services not available');
+            break;
+          default:
+            // some other error happened
+            console.log('An error occurred:', error.message);
+        }
+      } else {
+        // An error that's not related to Google Sign-In occurred
+        console.log('An unknown error occurred');
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -36,7 +99,10 @@ function Onboarding() {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.button}
-            onPress={signIn}
+            onPress={async () => {
+              signIn();
+              // navigation.navigate('TabSection', { screen: 'Home' });
+            }}
           >
             <Text style={styles.txt2}>Continue with</Text>
             {/*<Google width={23} height={23} />*/}

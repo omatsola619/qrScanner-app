@@ -25,12 +25,22 @@ function Home() {
     fetchUserInfo();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('@userInfo');
+      console.log('User info removed from AsyncStorage');
+      navigation.replace('Onboarding'); // Navigate to Onboarding screen
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <View style={styles.header}>
-            <View style={styles.dp}>
+            <TouchableOpacity onPress={handleLogout} style={styles.dp}>
               {userInfo?.photo ? (
                 <Image
                   source={{ uri: userInfo.photo }}
@@ -47,10 +57,10 @@ function Home() {
                   }}
                 />
               )}
-            </View>
+            </TouchableOpacity>
             <View>
               <Text>Welcome</Text>
-              <Text>{userInfo.givenName}</Text>
+              <Text>{userInfo ? userInfo.givenName : 'myname'}</Text>
             </View>
           </View>
           <View style={styles.scanWrp}>

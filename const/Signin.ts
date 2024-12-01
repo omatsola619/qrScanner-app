@@ -16,7 +16,9 @@ export const signIn = async () => {
 
       // Save user info to AsyncStorage
       await AsyncStorage.setItem('@userInfo', JSON.stringify(userInfo));
+
       console.log('User info saved to AsyncStorage');
+      // return true;
     } else {
       // Sign in was cancelled by the user
       console.log('Sign in was cancelled');
