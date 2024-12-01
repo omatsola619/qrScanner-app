@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 // import Qr from '../assets/qr.svg';
 // import Google from '../assets/google.svg';
 import {
@@ -67,6 +73,7 @@ function Onboarding() {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FDB623" />
       <View style={{ height: '30%' }} />
       <View style={styles.wrapper}>
         <View style={styles.qrContainer}>

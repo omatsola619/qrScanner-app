@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 // import Dp from '../assets/dp.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,6 +30,7 @@ function Home() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <View style={styles.header}>
@@ -36,7 +38,7 @@ function Home() {
               {user?.photo ? (
                 <Image
                   source={{ uri: user.photo }}
-                  style={{ width: 40, height: 40, borderRadius: '100%' }}
+                  style={{ width: 40, height: 40, borderRadius: 100 }}
                   resizeMode="cover"
                 />
               ) : (
