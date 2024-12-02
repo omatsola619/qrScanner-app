@@ -1,4 +1,5 @@
 import {
+  Alert,
   StatusBar,
   StyleSheet,
   Text,
@@ -42,31 +43,39 @@ function Onboarding() {
         const userInfo = response.data.user; // Extract user information
         console.log({ user: userInfo });
 
-        //log the user in
+        // Log the user in
         login(userInfo);
         console.log('User logged in successfully');
       } else {
         // Sign in was cancelled by the user
-        console.log('Sign in was cancelled');
+        Alert.alert(
+          'Sign-In Cancelled',
+          'You cancelled the Google sign-in process.'
+        );
       }
     } catch (error) {
       if (error) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:
-            // operation (e.g., sign in) already in progress
-            console.log('Sign-in already in progress');
+            Alert.alert(
+              'Sign-In In Progress',
+              'Sign-in is already in progress.'
+            );
             break;
           case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // Android only, play services not available or outdated
-            console.log('Google Play services not available');
+            Alert.alert(
+              'Play Services Unavailable',
+              'Google Play services are not available or outdated on your device.'
+            );
             break;
           default:
-            // some other error happened
-            console.log('An error occurred:', error.message);
+            Alert.alert(
+              'Sign-In Error',
+              error.message || 'An unknown error occurred.'
+            );
         }
       } else {
-        // An error that's not related to Google Sign-In occurred
-        console.log('An unknown error occurred');
+        Alert.alert('Unknown Error', 'An unexpected error occurred.');
       }
     }
   };
