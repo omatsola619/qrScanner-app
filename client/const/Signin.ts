@@ -13,10 +13,25 @@ export const signIn = async () => {
     // Check if sign-in was successful
     if (response) {
       const userInfo = response.data.user; // Extract user information
-      console.log({ user: userInfo });
+      // console.log({ user: userInfo });
 
       // Save user info to AsyncStorage
       await AsyncStorage.setItem('@userInfo', JSON.stringify(userInfo));
+
+      //send user info to backend
+      // console.log('Sending to backend:', { user: userInfo });
+      // try {
+      //   // console.log('Sending to backend:', { user: userInfo });
+      //   const response = await axios.post('http://localhost:5001/auth/login', {
+      //     email: userInfo.email,
+      //     googleId: userInfo.id,
+      //     name: userInfo.name,
+      //     avatar: userInfo.photo
+      //   });
+      //   console.log('DATA SUCCESSFULLY SENT TO BACKEND', response.data.user)
+      // } catch (error) {
+      //   console.error('Error logging in user:', error.response?.data || error.message);
+      // }
 
       console.log('User info saved to AsyncStorage');
       // return true;

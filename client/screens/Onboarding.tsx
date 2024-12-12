@@ -16,6 +16,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 function Onboarding() {
   const { login } = useContext(AuthContext);
@@ -42,6 +43,21 @@ function Onboarding() {
 
         // Log the user in
         login(userInfo);
+
+        //send user info to backend
+
+        const datatoSend = {
+          id: userInfo.id,
+          name: userInfo.name,
+          email: userInfo.email,
+          avatar: userInfo.photo
+        }
+
+          const resp = await axios.post('http://localhost:5001/auth/login', {
+            user: datatoSend
+          });
+          console.log('DATA SUCCESSFULLY SENT TO BACKEND', resp)
+
         console.log('User logged in successfully');
       } else {
         // Sign in was cancelled by the user
