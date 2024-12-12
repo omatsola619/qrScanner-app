@@ -7,18 +7,14 @@ import {
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
-// import Dp from '../assets/dp.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import * as SplashScreen from 'expo-splash-screen';
 
 function Home() {
-  const [userInfo, setUserInfo] = useState<any>(null);
   const navigation = useNavigation<any>();
-  const { user, logout, loading, login } = useContext(AuthContext);
+  const { user, logout, loading } = useContext(AuthContext);
 
   if (loading) {
     return (

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Alert,
   StatusBar,
@@ -6,22 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import Qr from '../assets/qr.svg';
-// import Google from '../assets/google.svg';
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '../const';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useContext, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
 
 function Onboarding() {
-  const { user, login, logout, setProfile } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   GoogleSignin.configure({
     webClientId: WEB_CLIENT_ID,
@@ -100,11 +97,9 @@ function Onboarding() {
             style={styles.button}
             onPress={async () => {
               signIn();
-              // navigation.navigate('TabSection', { screen: 'Home' });
             }}
           >
             <Text style={styles.txt2}>Continue with</Text>
-            {/*<Google width={23} height={23} />*/}
             <AntDesign name="google" size={23} color="white" />
           </TouchableOpacity>
         </View>

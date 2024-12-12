@@ -1,6 +1,5 @@
-import { ActivityIndicator, StatusBar, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyStack from './navigation/Stack';
@@ -12,11 +11,8 @@ import {
 } from './context/AuthContext';
 import * as SplashScreen from 'expo-splash-screen';
 
-const Tabs = createBottomTabNavigator();
-
 function Root() {
-  const { user, login, logout, setProfile, loading } = useContext(AuthContext);
-  const [isTryingLogin, setIsTryingLogin] = useState(true);
+  const { user, login, loading } = useContext(AuthContext);
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
@@ -30,7 +26,6 @@ function Root() {
       } catch (error) {
         console.error('Error fetching user profile:', error);
       } finally {
-        setIsTryingLogin(false);
         SplashScreen.hideAsync();
       }
     };
