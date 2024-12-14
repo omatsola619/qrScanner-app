@@ -53,7 +53,7 @@ function Onboarding() {
           avatar: userInfo.photo
         }
 
-          const resp = await axios.post('http://localhost:5001/auth/login', {
+          const resp = await axios.post('https://qrscanner-app.onrender.com/auth/login', {
             user: datatoSend
           });
           console.log('DATA SUCCESSFULLY SENT TO BACKEND', resp)
